@@ -1,0 +1,7 @@
+vid_fps: 3
+
+camera_1:
+    rtsp: rtsp://example.com
+    task: ['ppl', 'aruco']
+    crane_id: 1
+    side: 1 # ±1 (front or rear) only necessary if task contains aruco
