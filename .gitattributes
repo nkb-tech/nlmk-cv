@@ -1,0 +1,6 @@
+# Ignore ipynb in github line count
+*.ipynb linguist-documentation
+# Store models in git-lfs system
+weights/*.pt filter=lfs diff=lfs merge=lfs -text
+weights/*.torchscript filter=lfs diff=lfs merge=lfs -text
+weights/*.engine filter=lfs diff=lfs merge=lfs -text
