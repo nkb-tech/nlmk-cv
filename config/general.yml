@@ -24,7 +24,7 @@ pose_estimator:
     # Тип аруко маркера
     aruco_dict_type: DICT_7X7_100
 
-    
+
     model_path: /usr/src/app/weights/convnext_base_multihead_dog.torchscript
     img_area_threshold: 2500 # in px^2
     device: cuda:0
