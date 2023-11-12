@@ -1,7 +1,27 @@
-vid_fps: 3
-
 camera_1:
-    rtsp: rtsp://example.com
-    task: ['ppl', 'aruco']
+    link: rtsp://example.com
+    task: ['ppl', 'pose']
     crane_id: 1
     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zone: [[1,2,3]]
+
+camera_2:
+    link: rtsp://example.com
+    task: ['ppl', 'pose']
+    crane_id: 1
+    side: -1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zone: [[1,2,3]]
+
+camera_3:
+    link: rtsp://example.com
+    task: ['ppl']
+    crane_id: 0
+    side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zone: [[1,2,3]]
+
+camera_4:
+    link: rtsp://example.com
+    task: ['ppl', 'pose']
+    crane_id: 2
+    side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zone: [[1,2,3]]

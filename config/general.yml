@@ -1,0 +1,37 @@
+fps: 4
+
+detector:
+    model_path: /usr/src/app/weights/yolov8s_960_dog_half_nms_dynamic_conf_0.7_max_10_batch_28.engine
+    inference_imgsz: 960
+    inference_conf: 0.7
+    inference_bs: 28
+    orig_img_h: 720
+    orig_img_w: 1280
+    device: cuda:0
+    time_logging_period: 100
+
+pose_estimator:
+    # путь к матрице калибровки
+    calibration_matrix_path: "calib/calibration_matrix_render.npy"
+    # путь к коэффициентам дисторсии
+    distortion_coefficients_path: "calib/distortion_coefficients_render.npy"
+    # длина стороны маркера в метрах
+    edge_len: 0.7
+    # шаг, с которым маркеры установлены
+    marker_step: 10
+    # максимальное число маркеров
+    n_markers: 100
+    # Тип аруко маркера
+    aruco_dict_type: DICT_7X7_100
+
+    
+    model_path: /usr/src/app/weights/convnext_base_multihead_dog.torchscript
+    img_area_threshold: 2500 # in px^2
+    device: cuda:0
+    img_h: 224
+    img_w: 224
+    target_names: ['color', 'ear', 'fur', 'leg_len', 'muzzle', 'size']
+    time_logging_period: 1
+
+debug: # Only if debug option is set
+    save_img_path: /usr/src/app/logs/debug

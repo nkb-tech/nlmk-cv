@@ -1,0 +1,3 @@
+[submodule "cranpose"]
+	path = cranpose
+	url = git@github.com:nkb-tech/cranpose.git
