@@ -36,3 +36,6 @@ class Config:
             else:
                 self.pose_cams[row["crane_id"]][1] = i
         self.pose_cams = dict(self.pose_cams)
+        self.ppl_cams = []
+        for i, row in self.cams[self.cams.people == True].iterrows():
+            self.ppl_cams.append(i)

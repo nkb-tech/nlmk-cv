@@ -8,6 +8,7 @@ from threading import Event, Thread
 import cv2
 import numpy as np
 import pytz
+import requests as re
 import yaml
 
 from cranpose.core.estimators import PoseMultiple, PoseSingle
@@ -57,7 +58,7 @@ class Worker:
         logging.info(f"Pose Estimator initialized")
         # Sender info
         # TODO cooperate with another team
-
+        self.api_url = cfg["api_url"]
         # Debug
         self.debug = debug
         if self.debug:
@@ -134,6 +135,7 @@ class Worker:
         timestamp = datetime.now(TIMEZONE)
         poses = self.get_poses(imgs)
         dets = self.detector(imgs)
+        # TODO add zones
         if self.debug:
             self.log_debug(imgs, poses, dets, timestamp)
         self.send_results(poses, dets, timestamp)
@@ -150,9 +152,31 @@ class Worker:
             res[crane_idx] = coords
         return res
 
-    def send_results(self, bs64, cam, dogs_params, timestamp):
+    def send_results(self, poses, dets, timestamp):
         # TODO cooperate with another team
-        logging.info(f"Found {len(dogs_params)} dogs")
+        ppl_det_res = {}
+        for cam_idx in self.cams_cfg.ppl_cams:
+            ppl_det_res[self.cams_cfg.cam_names[cam_idx]] = [
+                {
+                    "bbox": [
+                        detection[:4]
+                    ],  # TODO Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
+                    "zone": "normal",  # TODO
+                }
+                for detection in dets[cam_idx]
+            ]
+        api_json = {
+            "poses": [
+                {"name": crane_idx, "x": pose_x, "close_to": []}  # TODO
+                for crane_idx, pose_x in poses.items()
+            ],
+            "people": [ppl_det_res],
+        }
+        resp = re.post(self.api_url, json=api_json)
+        if resp.status_code != 200:
+            logging.critical(
+                f"Bad api response code: {resp.status_code} with error: {resp.text}"
+            )
 
     def log_debug(self, imgs, poses, dets, timestamp):
         save_img_path = self.cfg["debug"]["save_img_path"]

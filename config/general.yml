@@ -1,4 +1,5 @@
 fps: 4
+api_url: url
 
 detector:
     model_path: /usr/src/app/weights/yolov8s_960_dog_half_nms_dynamic_conf_0.7_max_10_batch_28.engine
