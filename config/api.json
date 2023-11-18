@@ -21,28 +21,26 @@
             "close_to": ["crane_2"]
         }
     ],
-    "people": [
-        {
-            "cam_1": [
-                {
-                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                    "zone": "normal"
-                },
-                {
-                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                    "zone": "warning"
-                }
-            ],
-            "cam_2": [
-                {
-                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                    "zone": "danger"
-                },
-                {
-                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                    "zone": "warning"
-                }
-            ]
-        }
-    ]
+    "people": {
+        "cam_1": [
+            {
+                "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                "zone": "normal"
+            },
+            {
+                "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                "zone": "warning"
+            }
+        ],
+        "cam_2": [
+            {
+                "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                "zone": "danger"
+            },
+            {
+                "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                "zone": "warning"
+            }
+        ]
+    }
 }

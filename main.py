@@ -170,7 +170,7 @@ class Worker:
                 {"name": crane_idx, "x": pose_x, "close_to": []}  # TODO
                 for crane_idx, pose_x in poses.items()
             ],
-            "people": [ppl_det_res],
+            "people": ppl_det_res,
         }
         resp = re.post(self.api_url, json=api_json)
         if resp.status_code != 200:
