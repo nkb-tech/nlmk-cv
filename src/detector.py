@@ -4,12 +4,14 @@ from typing import Any
 
 import cv2
 import numpy as np
+import supervision as sv
 import torch
 from ultralytics import YOLO
 
 
 class Detector:
-    def __init__(self, cfg):
+    def __init__(self, zones, cfg):
+        # TODO add zones
         self.model = YOLO(model=cfg["model_path"], task="detect")
         self.device = torch.device(cfg["device"])
         self.cfg = cfg
@@ -35,6 +37,7 @@ class Detector:
             )
         self.time_logging_period = cfg["time_logging_period"]
         self.n_calls = -1
+        self.zones = zones
 
     def __call__(self, imgs: list) -> Any:
         self.n_calls += 1
@@ -65,8 +68,23 @@ class Detector:
             half=True,
         )
 
-        dets = [result.boxes.data.cpu().numpy() for result in results]
-
+        sv_dets = sv.Detections.from_ultralytics(results)
+        detection_zones = []
+        for i, zones in self.zones.items():
+            mask = np.array(["normal"] * len(sv_dets[i]))
+            for zone_type, zone in zones.items():
+                zone_triggers = zone.trigger(sv_dets[i])
+                mask[zone_triggers] = zone_type
+            detection_zones.append(mask)
+        dets = [
+            {
+                "bboxes": detection.boxes.xyxyn.cpu().numpy(),
+                "zones": detection_zone,
+            }
+            for detection, detection_zone in zip(
+                results, detection_zones
+            )
+        ]
         end_time_ns = perf_counter_ns()
         time_spent_ns = end_time_ns - start_time_ns
         time_spent_ms = time_spent_ns / 1e6

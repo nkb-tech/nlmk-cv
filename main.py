@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 import pytz
 import requests as re
+import supervision as sv
 import yaml
 
 from cranpose.core.estimators import PoseMultiple, PoseSingle
@@ -48,8 +49,20 @@ class Worker:
         )
         logging.info(f"Stream loader initialized")
         # Models
-        # TODO add zones
-        self.detector = Detector(cfg["detector"], self.cams_cfg)
+        self.zones = {
+            k: {
+                zone_type: sv.PolygonZone(
+                    np.array(zone),
+                    self.cams_cfg.frame_size[k],
+                    sv.Position.BOTTOM_CENTER,
+                )
+                for zone_type, zone in zones
+            }
+            for k, zones in self.cams_cfg.zones
+        }
+        self.detector = Detector(
+            cfg["detector"], self.zones, self.cams_cfg
+        )
         logging.info(f"People Detector initialized")
         # Crane positioning
         self.pose = self._init_pose_estimator(
@@ -57,7 +70,6 @@ class Worker:
         )
         logging.info(f"Pose Estimator initialized")
         # Sender info
-        # TODO cooperate with another team
         self.api_url = cfg["api_url"]
         # Debug
         self.debug = debug
@@ -135,7 +147,6 @@ class Worker:
         timestamp = datetime.now(TIMEZONE)
         poses = self.get_poses(imgs)
         dets = self.detector(imgs)
-        # TODO add zones
         if self.debug:
             self.log_debug(imgs, poses, dets, timestamp)
         self.send_results(poses, dets, timestamp)
@@ -158,12 +169,10 @@ class Worker:
         for cam_idx in self.cams_cfg.ppl_cams:
             ppl_det_res[self.cams_cfg.cam_names[cam_idx]] = [
                 {
-                    "bbox": [
-                        detection[:4]
-                    ],  # TODO Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
-                    "zone": "normal",  # TODO
+                    "bbox": bbox,  # Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
+                    "zone": dets[cam_idx]["zones"][i],
                 }
-                for detection in dets[cam_idx]
+                for i, bbox in enumerate(dets[cam_idx]["bboxes"])
             ]
         api_json = {
             "poses": [
