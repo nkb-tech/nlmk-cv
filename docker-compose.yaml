@@ -1,0 +1,62 @@
+version: '3.9'
+# do not forget the version line, this file syntax is invalid without it
+
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Set up default timezone
+        - TZ=Europe/Moscow
+        - CUDA_VERSION=11.8.0
+        - OS_VERSION=22.04
+        - TRT_VERSION=8.6.1.6
+        - TORCH_VERSION=2.1.0
+        - TORCHVISION_VERSION=0.16
+    image: pet-search
+    shm_size: '2gb'
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      # Mount logs datadir
+      - ./logs:/usr/src/app/logs
+    networks:
+      ps-backend_custom_net:
+        aliases:
+          - postgres
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+          memory: 10G
+        reservations:
+          cpus: '4'
+          memory: 10G
+          devices:
+            - driver: nvidia
+              device_ids: ['0', '1']
+              capabilities: [gpu]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    command: ["bash", "/usr/src/app/run_petsearch.sh"]
+    logging: *default-logging
+    environment:
+      - OMP_NUM_THREADS=1
+      # Avoid DDP error "MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library" https://github.com/pytorch/pytorch/issues/37377
+      - MKL_THREADING_LAYER=GNU
+
+networks:
+  ps-backend_custom_net:
+    # Label the other docker-compose network as an external network to the current docker-compose file
+    external: true

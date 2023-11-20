@@ -3,5 +3,5 @@ pathlib
 numpy
 click
 tqdm
-ipdb
 supervision
+ipdb
