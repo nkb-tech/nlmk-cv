@@ -4,3 +4,4 @@ numpy
 click
 tqdm
 ipdb
+supervision
