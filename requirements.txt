@@ -1,4 +1,6 @@
-opencv-python==4.6.0.66
+opencv-contrib-python==4.5.4.60
 pathlib
 numpy
 click
+tqdm
+ipdb
