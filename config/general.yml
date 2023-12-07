@@ -2,7 +2,7 @@ fps: 4
 api_url: http://portal/api/cv
 
 detector:
-    model_path: /usr/src/app/weights/yolov8s_960_dog_half_nms_dynamic_conf_0.7_max_10_batch_28.engine
+    model_path: /home/alexander/nkbtech/nlmk/crane_ppl_det/models/v8m_crowd_v5_albu_vbox.pt
     inference_imgsz: 960
     inference_conf: 0.7
     inference_bs: 28
@@ -13,9 +13,9 @@ detector:
 
 pose_estimator:
     # путь к матрице калибровки
-    calibration_matrix_path: "calib/calibration_matrix_render.npy"
+    calibration_matrix_path: "/home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/cranpose/calib/calibration_matrix_hikvision.npy"
     # путь к коэффициентам дисторсии
-    distortion_coefficients_path: "calib/distortion_coefficients_render.npy"
+    distortion_coefficients_path: "/home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/cranpose/calib/distortion_coefficients_hikvision.npy"
     # длина стороны маркера в метрах
     edge_len: 0.7
     # шаг, с которым маркеры установлены
@@ -24,16 +24,7 @@ pose_estimator:
     n_markers: 100
     # Тип аруко маркера
     aruco_dict_type: DICT_7X7_100
-
-
-    model_path: /usr/src/app/weights/convnext_base_multihead_dog.torchscript
-    img_area_threshold: 2500 # in px^2
-    device: cuda:0
-    img_h: 224
-    img_w: 224
-    target_names: ['color', 'ear', 'fur', 'leg_len', 'muzzle', 'size']
-    time_logging_period: 1
-
+    # Позиции маркеров в метрах
     poses:
         31: 0.
         30: 9.6
@@ -48,4 +39,4 @@ pose_estimator:
         21: 96.6
 
 debug: # Only if debug option is set
-    save_img_path: /usr/src/app/logs/debug
+    save_img_path: /home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/logs/debug

@@ -10,7 +10,7 @@ from ultralytics import YOLO
 
 
 class Detector:
-    def __init__(self, zones, cfg):
+    def __init__(self, cfg, zones):
         # TODO add zones
         self.model = YOLO(model=cfg["model_path"], task="detect")
         self.device = torch.device(cfg["device"])
@@ -68,10 +68,15 @@ class Detector:
             half=True,
         )
 
-        sv_dets = sv.Detections.from_ultralytics(results)
+        sv_dets = [
+            sv.Detections.from_ultralytics(res) for res in results
+        ]
         detection_zones = []
         for i, zones in self.zones.items():
-            mask = np.array(["normal"] * len(sv_dets[i]))
+            if len(sv_dets[i]) == 0:
+                detection_zones.append([])
+                continue
+            mask = np.array(["normal "] * len(sv_dets[i]), dtype=str)
             for zone_type, zone in zones.items():
                 zone_triggers = zone.trigger(sv_dets[i])
                 mask[zone_triggers] = zone_type

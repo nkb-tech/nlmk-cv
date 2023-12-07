@@ -2,13 +2,13 @@ import logging
 from collections import defaultdict
 
 import pandas as pd
-import yaml
 
 
 class Config:
-    def __init__(self, yaml_cfg):
-        with open(yaml_cfg, "r") as f:
-            self.cfg = yaml.safe_load(f)
+    def __init__(self, yaml_cfg: dict):
+        # with open(yaml_cfg, "r") as f:
+        #     self.cfg = yaml.safe_load(f)
+        self.cfg = yaml_cfg
         self.links = [c["link"] for c in self.cfg.values()]
         self.cam_names = [c for c in self.cfg.keys()]
         cams = {
@@ -19,6 +19,7 @@ class Config:
             "people": [],
             "poly_zone": [],
             "link": [],
+            "frame_size": [],
         }
         for cam_id, args in self.cfg.items():
             cams["cam_id"].append(cam_id)

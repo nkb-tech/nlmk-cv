@@ -56,13 +56,11 @@ class Worker:
                     self.cams_cfg.frame_size[k],
                     sv.Position.BOTTOM_CENTER,
                 )
-                for zone_type, zone in zones
+                for zone_type, zone in zones.items()
             }
-            for k, zones in self.cams_cfg.zones
+            for k, zones in self.cams_cfg.zones.items()
         }
-        self.detector = Detector(
-            cfg["detector"], self.zones, self.cams_cfg
-        )
+        self.detector = Detector(cfg["detector"], self.zones)
         logging.info(f"People Detector initialized")
         # Crane positioning
         self.pose = self._init_pose_estimator(
@@ -82,6 +80,15 @@ class Worker:
             logging.info(
                 f"Debug mode: ON, saving data to {self.cfg['debug']['save_img_path']}"
             )
+            save_img_path = self.cfg["debug"]["save_img_path"]
+            (save_img_path / "images").mkdir(
+                exist_ok=True, parents=True
+            )
+            (save_img_path / "labels").mkdir(
+                exist_ok=True, parents=True
+            )
+            (save_img_path / "poses").mkdir(exist_ok=True, parents=True)
+            self.save_img_path = save_img_path
         else:
             logging.info(f"Debug mode: OFF")
 
@@ -96,24 +103,26 @@ class Worker:
         for crane_idx, cam_idxs in crane_cams.items():
             pose_estimators[crane_idx] = [
                 PoseMultiple(
-                    PoseSingle(
-                        aruco_dict_type=aruco_dict_type,
-                        camera_orientation=1,
-                        n_markers=cfg["n_markers"],
-                        marker_poses=cfg["poses"],
-                        marker_edge_len=cfg["edge_len"],
-                        matrix_coefficients=k,
-                        distortion_coefficients=d,
-                    ),
-                    PoseSingle(
-                        aruco_dict_type=aruco_dict_type,
-                        camera_orientation=-1,
-                        n_markers=cfg["n_markers"],
-                        marker_poses=cfg["poses"],
-                        marker_edge_len=cfg["edge_len"],
-                        matrix_coefficients=k,
-                        distortion_coefficients=d,
-                    ),
+                    [
+                        PoseSingle(
+                            aruco_dict_type=aruco_dict_type,
+                            camera_orientation=1,
+                            n_markers=cfg["n_markers"],
+                            marker_poses=cfg["poses"],
+                            marker_edge_len=cfg["edge_len"],
+                            matrix_coefficients=k,
+                            distortion_coefficients=d,
+                        ),
+                        PoseSingle(
+                            aruco_dict_type=aruco_dict_type,
+                            camera_orientation=-1,
+                            n_markers=cfg["n_markers"],
+                            marker_poses=cfg["poses"],
+                            marker_edge_len=cfg["edge_len"],
+                            matrix_coefficients=k,
+                            distortion_coefficients=d,
+                        ),
+                    ]
                 ),
                 cam_idxs,
             ]
@@ -157,9 +166,18 @@ class Worker:
             est = pose_info[0]
             pose_cam_idx_rear = pose_info[1][1]
             pose_cam_idx_front = pose_info[1][0]
-            coords = est(
-                imgs[pose_cam_idx_front], imgs[pose_cam_idx_rear]
-            )[0, 3]
+            # TODO check None
+            img_front = (
+                imgs[pose_cam_idx_front]
+                if pose_cam_idx_front is not None
+                else None
+            )
+            img_rear = (
+                imgs[pose_cam_idx_rear]
+                if pose_cam_idx_rear is not None
+                else None
+            )
+            coords = est([img_front, img_rear])[0, 3]
             res[crane_idx] = coords
         return res
 
@@ -169,8 +187,8 @@ class Worker:
         for cam_idx in self.cams_cfg.ppl_cams:
             ppl_det_res[self.cams_cfg.cam_names[cam_idx]] = [
                 {
-                    "bbox": bbox,  # Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
-                    "zone": dets[cam_idx]["zones"][i],
+                    "bbox": bbox.tolist(),  # Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
+                    "zone": dets[cam_idx]["zones"][i].tolist(),
                 }
                 for i, bbox in enumerate(dets[cam_idx]["bboxes"])
             ]
@@ -181,43 +199,45 @@ class Worker:
             ],
             "people": ppl_det_res,
         }
-        resp = re.post(self.api_url, json=api_json)
+        resp = re.post(self.api_url, json=api_json, timeout=0.1)
         if resp.status_code != 200:
             logging.critical(
                 f"Bad api response code: {resp.status_code} with error: {resp.text}"
             )
 
     def log_debug(self, imgs, poses, dets, timestamp):
-        save_img_path = self.cfg["debug"]["save_img_path"]
-        (save_img_path / "images").mkdir(exist_ok=True, parents=True)
-        (save_img_path / "labels").mkdir(exist_ok=True, parents=True)
-        (save_img_path / "poses").mkdir(exist_ok=True, parents=True)
         timestamp_str = timestamp.isoformat("T", "seconds").replace(
             ":", "_"
         )
         for i, (img, det) in enumerate(zip(imgs, dets)):
-            boxes = det[:, :4].astype(int)
+            h, w, _ = img.shape
+            boxes = det["bboxes"][:, :4]
             for box in boxes:
+                xtl = int(box[0] * w)
+                ytl = int(box[1] * h)
+                xbr = int(box[2] * w)
+                ybr = int(box[3] * h)
                 img = cv2.rectangle(
                     img,
-                    pt1=box[:2],
-                    pt2=box[2:],
+                    pt1=(xtl, ytl),
+                    pt2=(xbr, ybr),
                     color=(0, 0, 255),
                     thickness=2,
                 )
             cv2.imwrite(
                 str(
-                    save_img_path
+                    self.save_img_path
                     / "images"
                     / f"{self.cams_cfg.cam_names[i]}_{timestamp_str}.jpg"
                 ),
                 img,
             )
             labels_str = [
-                " ".join([str(i) for i in lb]) + "\n" for lb in det
+                " ".join([str(i) for i in lb]) + z + "\n"
+                for lb, z in zip(det["bboxes"], det["zones"])
             ]
             with (
-                save_img_path
+                self.save_img_path
                 / "labels"
                 / f"{self.cams_cfg.cam_names[i]}_{timestamp_str}.txt"
             ).open("w") as f:
@@ -225,9 +245,9 @@ class Worker:
         poses_str = "\n".join(
             [f"{k}:{v:.2f}" for k, v in poses.items()]
         )
-        with (save_img_path / "poses" / f"{timestamp_str}.txt").open(
-            "w"
-        ) as f:
+        with (
+            self.save_img_path / "poses" / f"{timestamp_str}.txt"
+        ).open("w") as f:
             f.write(poses_str)
 
 
