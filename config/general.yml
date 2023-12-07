@@ -1,5 +1,5 @@
 fps: 4
-api_url: url
+api_url: http://portal/api/cv
 
 detector:
     model_path: /usr/src/app/weights/yolov8s_960_dog_half_nms_dynamic_conf_0.7_max_10_batch_28.engine
@@ -33,6 +33,19 @@ pose_estimator:
     img_w: 224
     target_names: ['color', 'ear', 'fur', 'leg_len', 'muzzle', 'size']
     time_logging_period: 1
+
+    poses:
+        31: 0.
+        30: 9.6
+        29: 19.6
+        28: 29.53
+        27: 39.52
+        26: 48.52
+        25: 58.03
+        24: 67.23
+        23: 76.65
+        22: 86.65
+        21: 96.6
 
 debug: # Only if debug option is set
     save_img_path: /usr/src/app/logs/debug
