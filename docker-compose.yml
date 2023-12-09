@@ -1,0 +1,43 @@
+version: '3.9'
+# do not forget the version line, this file syntax is invalid without it
+
+services:
+  cv_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: x86_64/nkbtech:1.1.2
+    command: ["bash", "/usr/src/app_new/run.sh"]
+    # command: bash
+    # stdin_open: true
+    # tty: true
+    container_name: nkbtech-cv
+    shm_size: '2gb'
+    volumes:
+      - ./:/usr/src/app_new
+    networks:
+      portal-service_cv:
+        aliases:
+          - api_service
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 10G
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    environment:
+      - OMP_NUM_THREADS=1
+      - MKL_THREADING_LAYER=GNU
+
+networks:
+  portal-service_cv:
+    external: true

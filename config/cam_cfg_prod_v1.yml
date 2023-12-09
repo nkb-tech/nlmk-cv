@@ -1,0 +1,149 @@
+# camera_1:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.7:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 1
+#     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+# camera_2:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.8:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 1
+#     side: -1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+camera_3:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.36:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        # warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]] # TODO not all zones
+        danger: [[0, 0],[0, 720],[1280, 720],[1280, 0]]
+
+camera_4:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.37:554/ISAPI/Streaming/Channels/102
+    task: ['ppl', 'pose']
+    crane_id: 6
+    side: -1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[681, 720],[161, 0],[809, 0],[1280, 358],[1280, 720]]
+        # danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]  # TODO not all zones
+
+camera_5:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.38:554/ISAPI/Streaming/Channels/102
+    task: ['ppl', 'pose']
+    crane_id: 6
+    side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[0, 402],[777, 0],[1045, 0],[489, 720],[0, 720]]
+        danger: [[661, 720],[929, 270],[1280, 334],[1280, 720]]
+
+# camera_6:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.39:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 2
+#     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+camera_7:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.40:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        # warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]] # TODO not all zones
+        danger: [[0, 706],[0, 386],[1280, 386],[1280, 720]]
+
+camera_8:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.41:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        # warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]] # TODO not all zones
+        danger: [[273, 720],[357, 0],[889, 0],[921, 720]]
+
+camera_9:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.42:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[0, 720],[0, 390],[1280, 366],[1280, 720]]
+        # danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]] # TODO not all zones
+
+# camera_10:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.43:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 2
+#     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+camera_11:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.44:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[0, 326],[1153, 74],[1280, 398],[305, 720],[21, 720]]
+        # danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+camera_12:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.45:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[697, 720],[581, 262],[801, 250],[1280, 720]]
+        danger: [[0, 720],[0, 426],[605, 450],[633, 720]]
+
+# camera_13:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.4:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 2
+#     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+# camera_14:
+#     frame_size: [1280, 720]
+#     link: rtsp://admin:Intechcom1@172.25.104.5:554/ISAPI/Streaming/Channels/102
+#     task: ['ppl', 'pose']
+#     crane_id: 2
+#     side: 1 # ±1 (front or rear) only necessary if task contains aruco
+#     detection_zones:
+#         warning: [[0, 378],[585, 342],[1280, 386],[1280, 134],[0, 146]]
+#         danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]
+
+camera_15:
+    frame_size: [1280, 720]
+    link: rtsp://admin:Intechcom1@172.25.104.6:554/ISAPI/Streaming/Channels/102
+    task: ['ppl']
+    # crane_id: 6
+    # side: 1 # ±1 (front or rear) only necessary if task contains aruco
+    detection_zones:
+        warning: [[681, 720],[497, 478],[897, 358],[641, 218],[801, 182],[1280, 394],[1280, 720]]
+        # danger: [[0, 370],[649, 354],[1280, 398],[1280, 720],[0, 720]]

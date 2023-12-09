@@ -1,8 +1,8 @@
 fps: 4
-api_url: http://portal/api/cv
+api_url: http://service:4000/api/cv
 
 detector:
-    model_path: /home/alexander/nkbtech/nlmk/crane_ppl_det/models/v8m_crowd_v5_albu_vbox.pt
+    model_path: /usr/src/app_new/models/v8m_crowd_v5_albu_vbox.pt
     inference_imgsz: 960
     inference_conf: 0.7
     inference_bs: 28
@@ -13,9 +13,9 @@ detector:
 
 pose_estimator:
     # путь к матрице калибровки
-    calibration_matrix_path: "/home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/cranpose/calib/calibration_matrix_hikvision.npy"
+    calibration_matrix_path: "/usr/src/app_new/cranpose/calib/calibration_matrix_hikvision.npy"
     # путь к коэффициентам дисторсии
-    distortion_coefficients_path: "/home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/cranpose/calib/distortion_coefficients_hikvision.npy"
+    distortion_coefficients_path: "/usr/src/app_new/cranpose/calib/distortion_coefficients_hikvision.npy"
     # длина стороны маркера в метрах
     edge_len: 0.7
     # шаг, с которым маркеры установлены
@@ -39,4 +39,4 @@ pose_estimator:
         21: 96.6
 
 debug: # Only if debug option is set
-    save_img_path: /home/alexander/nkbtech/nlmk/crane_ppl_det/repos/nlmk_cv_general/logs/debug
+    save_img_path: /usr/src/app_new/logs/debug

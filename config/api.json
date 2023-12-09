@@ -1,46 +1,110 @@
-{
-    "poses": [
-        {
-            "name": "crane_3",
-            "x": 123.5,
-            "close_to": ["crane_2"]
-        },
-        {
-            "name": "crane_4",
-            "x": 130.0,
-            "close_to": ["crane_1", "crane_3"]
-        },
-        {
-            "name": "crane_5",
-            "x": 137.1,
-            "close_to": ["crane_2"]
-        },
-        {
-            "name": "crane_6",
-            "x": 137.1,
-            "close_to": ["crane_2"]
-        }
-    ],
-    "people": {
-        "cam_1": [
+[
+    {
+        "poses": [
             {
-                "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                "zone": "normal"
+                "name": "crane_3",
+                "x": 123.5,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
             },
             {
-                "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                "zone": "warning"
+                "name": "crane_4",
+                "x": 130.0,
+                "close_to": ["crane_1", "crane_3"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+            },
+            {
+                "name": "crane_5",
+                "x": 137.1,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+            },
+            {
+                "name": "crane_6",
+                "x": 137.1,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
             }
         ],
-        "cam_2": [
+        "people": {
+            "cam_1": [
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "normal",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                },
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "warning",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                }
+            ],
+            "cam_2": [
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "danger",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                },
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "warning",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                }
+            ]
+        }
+    },
+    { // Old if some
+        "poses": [
             {
-                "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                "zone": "danger"
+                "name": "crane_3",
+                "x": 123.5,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
             },
             {
-                "bbox": ["xtl", "ytl", "xbr", "ybr"],
-                "zone": "warning"
+                "name": "crane_4",
+                "x": 130.0,
+                "close_to": ["crane_1", "crane_3"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+            },
+            {
+                "name": "crane_5",
+                "x": 137.1,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+            },
+            {
+                "name": "crane_6",
+                "x": 137.1,
+                "close_to": ["crane_2"],
+                "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
             }
-        ]
+        ],
+        "people": {
+            "cam_1": [
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "normal",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                },
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "warning",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                }
+            ],
+            "cam_2": [
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "danger",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                },
+                {
+                    "bbox": ["xtl", "ytl", "xbr", "ybr"],
+                    "zone": "warning",
+                    "timestamp": "YYYY-MM-DDThh_mm_ss.ms+TZ"
+                }
+            ]
+        }
     }
-}
+]

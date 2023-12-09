@@ -12,8 +12,8 @@ import requests as re
 import supervision as sv
 import yaml
 
-from cranpose.core.estimators import PoseMultiple, PoseSingle
-from cranpose.core.utils import ARUCO_DICT
+from cranpose.estimators import PoseMultiple, PoseSingle
+from cranpose.utils import ARUCO_DICT
 from src.config import Config
 from src.dataloader import StreamLoader
 from src.detector import Detector
@@ -69,6 +69,7 @@ class Worker:
         logging.info(f"Pose Estimator initialized")
         # Sender info
         self.api_url = cfg["api_url"]
+        self.cache_buffer = []
         # Debug
         self.debug = debug
         if self.debug:
@@ -103,7 +104,7 @@ class Worker:
         for crane_idx, cam_idxs in crane_cams.items():
             pose_estimators[crane_idx] = [
                 PoseMultiple(
-                    [
+                    [  # TODO add biases for each single
                         PoseSingle(
                             aruco_dict_type=aruco_dict_type,
                             camera_orientation=1,
@@ -183,26 +184,39 @@ class Worker:
 
     def send_results(self, poses, dets, timestamp):
         # TODO cooperate with another team
+        timestamp = timestamp.isoformat()
         ppl_det_res = {}
         for cam_idx in self.cams_cfg.ppl_cams:
             ppl_det_res[self.cams_cfg.cam_names[cam_idx]] = [
                 {
                     "bbox": bbox.tolist(),  # Attention on bboxes format (0-1), xtl, ytl, xbr, ybr
                     "zone": dets[cam_idx]["zones"][i].tolist(),
+                    "timestamp": timestamp,
                 }
                 for i, bbox in enumerate(dets[cam_idx]["bboxes"])
             ]
         api_json = {
             "poses": [
-                {"name": crane_idx, "x": pose_x, "close_to": []}  # TODO
+                {
+                    "name": crane_idx,
+                    "x": pose_x,
+                    "close_to": [],  # TODO
+                    "timestamp": timestamp,
+                }
                 for crane_idx, pose_x in poses.items()
             ],
             "people": ppl_det_res,
         }
-        resp = re.post(self.api_url, json=api_json, timeout=0.1)
+        self.cache_buffer.append(api_json)
+        resp = re.post(
+            self.api_url, json=self.cache_buffer, timeout=0.1
+        )
+        if resp.status_code == 200:
+            self.cache_buffer = []
         if resp.status_code != 200:
             logging.critical(
                 f"Bad api response code: {resp.status_code} with error: {resp.text}"
+                "Caching results"
             )
 
     def log_debug(self, imgs, poses, dets, timestamp):
